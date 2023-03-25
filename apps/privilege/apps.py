@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class PrivliegeConfig(AppConfig):
+class PrivilegeConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.privliege'
+    name = 'apps.privilege'
