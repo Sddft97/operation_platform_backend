@@ -17,8 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 
 from apps.video.urls import urlpatterns as video_urls
+from utils.exception_handler import http404handler, http500handler
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include(video_urls))
 ]
+
+handler404 = http404handler
+handler500 = http500handler
