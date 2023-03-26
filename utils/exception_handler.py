@@ -38,7 +38,7 @@ class ExceptionMiddleware(MiddlewareMixin):
         print(exception)
         ex_data = {
             'success': False,
-            'msg': 'Server Error',
+            'msg': 'Internal Server Error',
             'code': 500,
             'data': ''
         }
@@ -73,7 +73,7 @@ def http500handler(request, exception=None):
     """
     data = {
         'success': False,
-        'msg': 'Server Error',
+        'msg': 'Internal Server Error',
         'code': 500,
         'data': ''
     }

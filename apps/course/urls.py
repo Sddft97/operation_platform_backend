@@ -5,7 +5,7 @@ from apps.course.views import CourseViewSet, CourseTypeViewSet
 
 router = routers.DefaultRouter()
 router.register('course', CourseViewSet)
-router.register('courseType', CourseTypeViewSet)
+router.register('coursetype', CourseTypeViewSet)
 
 urlpatterns = [
     path('data/', include(router.urls)),
