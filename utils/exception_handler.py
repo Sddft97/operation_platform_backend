@@ -14,11 +14,12 @@ def custom_exception_handler(exc, context):
 
     无法处理的Exception将传递给django的异常处理器
     """
+    print(exc)
     response = exception_handler(exc, context)
     if response:
         return JsonResponse(data=response.data,
                             code=response.status_code,
-                            msg=exc.detail,
+                            msg=response.status_text,
                             success=False)
     return response
 
@@ -34,7 +35,7 @@ class ExceptionMiddleware(MiddlewareMixin):
         """
         中间件中定义此方法可用于处理异常
         """
-
+        print(exception)
         ex_data = {
             'success': False,
             'msg': 'Server Error',
@@ -53,6 +54,7 @@ def http404handler(request, exception=None):
     原生django处理404时会返回一个html页面,
     重写此逻辑使其返回json
     """
+    print(exception)
     data = {
         'success': False,
         'msg': 'The resource is not found',

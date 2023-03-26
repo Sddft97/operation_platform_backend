@@ -16,12 +16,22 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from apps.course.urls import urlpatterns as course_urls
+from apps.department.urls import urlpatterns as department_urls
+from apps.privilege.urls import urlpatterns as privilege_urls
+from apps.user.urls import urlpatterns as user_urls
 from apps.video.urls import urlpatterns as video_urls
 from utils.exception_handler import http404handler, http500handler
 
+API_PREFIX = 'api/v1/'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/', include(video_urls))
+    path(API_PREFIX, include(video_urls)),
+    path(API_PREFIX, include(user_urls)),
+    path(API_PREFIX, include(privilege_urls)),
+    path(API_PREFIX, include(course_urls)),
+    path(API_PREFIX, include(department_urls)),
 ]
 
 handler404 = http404handler
