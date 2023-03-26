@@ -1,0 +1,22 @@
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
+
+
+class AppPageNumberPagination(PageNumberPagination):
+    page_size = 10  # default page size
+    max_page_size = 50
+    page_query_param = '_page'
+    page_size_query_param = '_limit'  # ?_page=xx&_limit=xx
+
+    def get_paginated_response(self, data):
+        return Response({
+            'links': {
+                'next': self.get_next_link(),
+                'previous': self.get_previous_link()
+            },
+            'totalCount': self.page.paginator.count,
+            'currentPageNum': self.page.number,
+            'hasNextPage': self.page.has_next(),
+            'hasPreviousPage': self.page.has_previous(),
+            'results': data,
+        })
