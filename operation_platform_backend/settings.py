@@ -9,8 +9,15 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+
+# attach os variable 'CURRENT_ENV' and select different settings, default 'dev'
+CURRENT_ENV = os.getenv('CURRENT_ENV', 'dev')
+if CURRENT_ENV == 'prod':
+    from config.settings_prod import *
+else:
+    from config.settings_dev import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,9 +27,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-12c#h+9zh%7nq06z&mr4y=a(o_=#1c_plwd0msv$fskft&js8b'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -78,20 +82,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'operation_platform_backend.wsgi.application'
-
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'operation_platform',
-        'USER': 'root',
-        'PASSWORD': '010508ssw',
-        'HOST': 'localhost',
-        'PORT': '3306'
-    }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
