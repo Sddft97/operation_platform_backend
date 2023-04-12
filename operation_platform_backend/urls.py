@@ -13,7 +13,6 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path, include
 
 from apps.course.urls import urlpatterns as course_urls
@@ -26,7 +25,7 @@ from utils.exception_handler import http404handler, http500handler
 API_PREFIX = 'api/v1/'
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
     path(API_PREFIX, include(video_urls)),
     path(API_PREFIX, include(user_urls)),
     path(API_PREFIX, include(privilege_urls)),

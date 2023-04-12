@@ -1,4 +1,5 @@
 # SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = True
 
 # Database
@@ -16,4 +17,9 @@ DATABASES = {
 }
 
 # resource root path for videos, images, etc
-RESOURCE_DIR = r'F:\resource'
+MEDIA_ROOT = r'F:\resource'
+
+# temp dictionary to save file chunks when uploading big files by chunk
+TMP_UPLOAD_ROOT = r'F:\resource\tmp'
+
+STATIC_SERVER = r'http://localhost:3557/'
