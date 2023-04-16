@@ -1,3 +1,5 @@
+import traceback
+
 from django.http.response import JsonResponse as JResponse
 from django.utils.deprecation import MiddlewareMixin
 from rest_framework.views import exception_handler
@@ -14,9 +16,9 @@ def custom_exception_handler(exc, context):
 
     无法处理的Exception将传递给django的异常处理器
     """
-    print(exc)
     response = exception_handler(exc, context)
     if response:
+        traceback.print_exc()
         return JsonResponse(data=response.data,
                             code=response.status_code,
                             msg=response.status_text,
@@ -35,7 +37,7 @@ class ExceptionMiddleware(MiddlewareMixin):
         """
         中间件中定义此方法可用于处理异常
         """
-        print(exception)
+        traceback.print_exc()
         ex_data = {
             'success': False,
             'msg': 'Internal Server Error',
@@ -54,7 +56,7 @@ def http404handler(request, exception=None):
     原生django处理404时会返回一个html页面,
     重写此逻辑使其返回json
     """
-    print(exception)
+    traceback.print_exc()
     data = {
         'success': False,
         'msg': 'The resource is not found',
@@ -71,6 +73,7 @@ def http500handler(request, exception=None):
     原生django处理500时会返回一个html页面,
     重写此逻辑使其返回json
     """
+    traceback.print_exc()
     data = {
         'success': False,
         'msg': 'Internal Server Error',

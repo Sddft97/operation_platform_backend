@@ -1,4 +1,5 @@
 import os
+import shutil
 import time
 
 from django.conf import settings
@@ -55,7 +56,7 @@ class MultipartFileUploadService:
                         write_stream.write(data)
 
         # 合并完成删除切片
-        # shutil.rmtree(chunk_dir)
+        shutil.rmtree(chunk_dir)
         return file_path
 
     def upload_file_chunk(self, chunk: UploadedFile, chunk_name: str, file_hash: str, file_ext: str) -> None:
