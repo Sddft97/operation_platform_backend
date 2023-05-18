@@ -48,8 +48,8 @@ class VideoUploadService(MultipartFileUploadService):
             # step0 为视频生成首帧封面
             self.generate_video_poster(input_path, poster_path)
             # todo step1 将原视频交给去雾模型进行演算
-            # step2 将去雾视频转换为其它分辨率，共3个分辨率以供选择(1980x1080, 1280x720, 640x320)
-            multi_resolution_output = self.resolution_conversion(input_path, ['1980x1080', '1280x720', '640x320'])
+            # step2 将去雾视频转换为其它分辨率，共3个分辨率以供选择(1980x1080, 1280x720, 640x360)
+            multi_resolution_output = self.resolution_conversion(input_path, ['1980x1080', '1280x720', '640x360'])
             # step3 将原视频和去雾视频转为dash(异步)
             self.convert2dash(multi_resolution_output, mpd_path)
 
@@ -63,7 +63,7 @@ class VideoUploadService(MultipartFileUploadService):
 
     def convert2dash(self, input_path_list: Sequence[str], mpd_path: str):
         input_list = [ffmpeg.input(file_path) for file_path in input_path_list]
-        ffmpeg.output(*input_list, mpd_path, vcodec="h264", acodec="aac", preset="veryfast", seg_duration=10,
+        ffmpeg.output(*input_list, mpd_path, vcodec="h264", acodec="aac", preset="veryfast", seg_duration=5,
                       adaptation_sets="id=0,streams=v id=1,streams=a", f="dash").run(quiet=True)
 
     def resolution_conversion(self, input_path: str, target_resolution_list: Sequence[str]):
