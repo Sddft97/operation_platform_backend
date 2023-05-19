@@ -40,7 +40,7 @@ class VideoUploadService(MultipartFileUploadService):
         if not os.path.exists(target_dir):
             os.makedirs(target_dir)
 
-        target_path = shutil.move(origin_video_path, target_dir)
+        target_path = shutil.move(origin_video_path, os.path.join(target_dir, os.path.basename(origin_video_path)))
         return target_path
 
     def video_process(self, input_path: str, mpd_path: str, poster_path: str, video_id: str, operator: ModelViewSet):

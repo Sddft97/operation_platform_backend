@@ -66,7 +66,6 @@ class VideoViewSet(viewsets.ModelViewSet):
         file_hash = request.data.get('fileHash')
         file_ext = request.data.get('fileExt')
         file_name = request.data.get('fileName')
-        course_id = request.data.get('courseId')
 
         origin_path = self.video_upload_service.merge_file_chunk(file_hash, file_ext)
         target_path = self.video_upload_service.move_to_db_dictionary(origin_path)
@@ -78,7 +77,6 @@ class VideoViewSet(viewsets.ModelViewSet):
             "videoName": file_name,
             "videoUrl": os.path.relpath(mpd_path, MEDIA_ROOT),
             "coverImgUrl": os.path.relpath(poster_path, MEDIA_ROOT),
-            "courseId": course_id,
             "status": StatusEnum.PROCESSING.value
         }
         serializer = self.get_serializer(data=video_data)
