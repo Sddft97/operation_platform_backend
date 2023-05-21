@@ -7,6 +7,8 @@ class AppPageNumberPagination(PageNumberPagination):
     max_page_size = 50
     page_query_param = '_page'
     page_size_query_param = '_limit'  # ?_page=xx&_limit=xx
+    page_query_description = "获取记录的页码"
+    page_size_query_description = "每一页的最大记录数"
 
     def get_paginated_response(self, data):
         return Response({

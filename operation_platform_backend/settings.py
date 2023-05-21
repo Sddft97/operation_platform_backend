@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 
+from django.conf.global_settings import STATICFILES_DIRS
+
 # attach os variable 'CURRENT_ENV' and select different settings, default 'dev'
 CURRENT_ENV = os.getenv('CURRENT_ENV', 'dev')
 if CURRENT_ENV == 'prod':
@@ -47,7 +49,8 @@ INSTALLED_APPS = [
     'apps.video',
     'apps.department',
     'apps.course',
-    'apps.privilege'
+    'apps.privilege',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -128,6 +131,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
     ),

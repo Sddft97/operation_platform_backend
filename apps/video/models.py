@@ -12,15 +12,21 @@ class StatusEnum(Enum):
 
 # Create your models here.
 class Video(models.Model):
+    class StatusChoices(models.IntegerChoices):
+        UNKNOWN = StatusEnum.UNKNOWN.value
+        UPLOADING = StatusEnum.UPLOADING.value
+        PROCESSING = StatusEnum.PROCESSING.value
+        FINISHED = StatusEnum.FINISHED.value
+
     videoId = models.CharField(unique=True, max_length=50)
     videoName = models.CharField(max_length=100)
     videoUrl = models.CharField(unique=True, max_length=255)
     coverImgUrl = models.CharField(blank=True, null=True, max_length=255)
     createdAt = models.DateTimeField(auto_now_add=True)
-    lastViewedAt = models.DateTimeField(auto_now=True)
+    lastModifiedAt = models.DateTimeField(auto_now=True)
     courseId = models.CharField(max_length=50, null=True, blank=True)
     resolutionVersion = models.CharField(max_length=50, null=True, blank=True)
-    status = models.IntegerField(default=StatusEnum.UNKNOWN.value)
+    status = models.IntegerField(default=StatusEnum.UNKNOWN.value, choices=StatusChoices.choices)
 
     class Meta:
         db_table = 'video'
