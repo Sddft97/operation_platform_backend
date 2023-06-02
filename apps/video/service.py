@@ -49,9 +49,19 @@ class VideoUploadService(MultipartFileUploadService):
             self.generate_video_poster(input_path, poster_path)
             # todo step1 将原视频交给去雾模型进行演算
             # step2 将去雾视频转换为其它分辨率，共3个分辨率以供选择(1980x1080, 1280x720, 640x360)
-            multi_resolution_output = self.resolution_conversion(input_path, ['1980x1080', '1280x720', '640x360'])
+            # todo 由于还没接入去雾模型，所以这里生成假的去雾视频路径，后续接入了将这里替换成真的
+            dehazed_input_path, ext = extract_ext(input_path)
+            dehazed_input_path = f'{dehazed_input_path}_dehazed.{ext}'
+            shutil.copy(input_path, dehazed_input_path)
+            dehazed_resolution_output = self.resolution_conversion(dehazed_input_path,
+                                                                   ['1980x1080', '1280x720', '640x360'],
+                                                                   ['8.1M', '4.6M', '1.6M'])  # 去雾视频清晰度转换
+            origin_resolution_output = self.resolution_conversion(input_path,
+                                                                  ['1980x1080', '1280x720', '640x360'],
+                                                                  ['8M', '4.5M', '1.5M'])  # 原版视频清晰度转换
+            resolution_output = [*dehazed_resolution_output, *origin_resolution_output]  # 将两组清晰度合并
             # step3 将原视频和去雾视频转为dash(异步)
-            self.convert2dash(multi_resolution_output, mpd_path)
+            self.convert2dash(resolution_output, mpd_path)
 
             # 更新数据库状态
             operator.get_queryset().filter(videoId=video_id).update(
@@ -66,16 +76,17 @@ class VideoUploadService(MultipartFileUploadService):
         ffmpeg.output(*input_list, mpd_path, vcodec="h264", acodec="aac", preset="veryfast", seg_duration=5,
                       adaptation_sets="id=0,streams=v id=1,streams=a", f="dash").run(quiet=True)
 
-    def resolution_conversion(self, input_path: str, target_resolution_list: Sequence[str]):
+    def resolution_conversion(self, input_path: str, target_resolution_list: Sequence[str],
+                              target_bitrate_list: Sequence[str]):
         file_path_, ext = extract_ext(input_path)
         output_list = []
         output_path_list = []
-        for target_resolution in target_resolution_list:
+        for target_resolution, target_bitrate in zip(target_resolution_list, target_bitrate_list):
             output_path = f'{file_path_}_{target_resolution}.{ext}'
             output_path_list.append(output_path)
             input_ = ffmpeg.input(input_path)
             output_list.append(ffmpeg.filter(input_.video, "scale", target_resolution)
-                               .output(input_.audio, output_path))
+                               .output(input_.audio, output_path, video_bitrate=target_bitrate))
 
         ffmpeg.merge_outputs(*output_list).run(quiet=True)
         return output_path_list
