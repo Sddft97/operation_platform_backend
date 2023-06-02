@@ -247,3 +247,6 @@ cython_debug/
 *.iml
 out
 gen
+
+# django migrations
+apps/**/migrations
