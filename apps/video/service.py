@@ -56,7 +56,7 @@ class VideoUploadService(MultipartFileUploadService):
             # 更新数据库状态
             operator.get_queryset().filter(videoId=video_id).update(
                 status=StatusEnum.FINISHED.value,
-                resolutionVersion='1980x1080,1280x720,640x320'
+                resolutionVersion='1980x1080,1280x720,640x360'
             )
 
         threading.Thread(target=time_consuming_process).start()
